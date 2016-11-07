@@ -1,26 +1,114 @@
 class OxoBoard:
-    def __init__(self):
-        """ The initialiser. Initialise any fields you need here. """
-        raise NotImplementedError("TODO: implement __init__")
+    def __init__(self, x, y):
+
+        # create a 2D array of a 3 X 3 grid
+        self.board = [[0, 0, 0],[0, 0, 0],[0, 0, 0]]
 
     def get_square(self, x, y):
-        """ Return 0, 1 or 2 depending on the contents of the specified square. """
-        raise NotImplementedError("TODO: implement get_square")
+        #this function returns the value of a square in the array
+        return self.board[x][y]
+
 
     def set_square(self, x, y, mark):
-        """ If the specified square is currently empty (0), fill it with mark and return True.
-            If the square is not empty, leave it as-is and return False. """
-        raise NotImplementedError("TODO: implement set_square")
+        #This function sets a square in the array
+        if self.get_square(x,y) == 0:
+            self.board[x][y] = mark
+            return True
+        else:
+            return False
+
 
     def is_board_full(self):
-        """ If there are still empty squares on the board, return False.
-            If there are no empty squares, return True. """
-        raise NotImplementedError("TODO: implement is_board_full")
 
-    def get_winner(self):
-        """ If a player has three in a row, return 1 or 2 depending on which player.
-            Otherwise, return 0. """
-        raise NotImplementedError("TODO: implement get_winner")
+        fullTiles = 0
+
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                squareContent = self.get_square(i, j)
+                if squareContent != 0:
+                    fullTiles += 1
+                    if fullTiles == 9:
+                        return True
+                else:
+                    return False
+
+
+
+    def get_winner(self, latestX, latestY, currentPlayer):
+
+        total = latestX + latestY
+        checkDiagnols = 0
+        rowCount = 0
+        coloumnCount = 0
+
+        # Check if we need to check diagnols by checking if the sum of the x and y tiles is even
+
+        if total % 2 == 0:
+            checkDiagnols == 1
+
+        ### CHECK HORIZONTAL AND VERTICAL 3 IN A ROW ###
+
+        for i in range(3):
+
+
+            Square = self.get_square(i, latestY)
+            if Square == currentPlayer:
+                rowCount += 1
+                if rowCount == 3:
+                    return currentPlayer
+
+
+            Square = self.get_square(latestX, i)
+            if Square == currentPlayer:
+                coloumnCount += 1
+                if coloumnCount == 3:
+                    return currentPlayer
+
+        ###### CHECK DIAGNOLS ######
+
+        # here i try to speed up the process by eliminating useless checks
+
+        if checkDiagnols == 1:
+            if latestX and latestY == 1:
+                checkDiagnol_1 = 1
+                checkDiagnol_2 = 1
+            elif total == 2:
+                checkDiagnol_2 = 1
+            else:
+                checkDiagnol_1 = 1
+
+
+
+            if checkDiagnol_1 == 1:
+
+                for i in range(3):
+                    count = 0
+                    square = self.get_square(i, i)
+                    if square == currentPlayer:
+                        count += 1
+                        if count == 3:
+                            return currentPlayer
+                            break
+
+            if checkDiagnol_2 == 1:
+
+                for i in range(3):
+                    count = 0
+                    square = self.get_square(i, 2 - i)
+                    if square == currentPlayer:
+                        count += 1
+                        if count == 3:
+                            return currentPlayer
+                            break
+        return 0
+
+
+
+
+
+
+
+
 
     def show(self):
         """ Display the current board state in the terminal. You should not need to edit this. """
@@ -61,7 +149,7 @@ def input_square():
 
 # The main game. You should not need to edit this.
 if __name__ == '__main__':
-    board = OxoBoard()
+    board = OxoBoard(3, 3)
     current_player = 1
     while True:
         board.show()
@@ -70,9 +158,9 @@ if __name__ == '__main__':
 
         if board.set_square(x, y, current_player):
             # Move was played successfully, so check for a winner
-            winner = board.get_winner()
+            winner = board.get_winner(x, y, current_player)
             if winner != 0:
-                print "Player", winner, "wins!"
+                print "Player", winner, "wins!!!!!!!!!!!!!!!!"
                 break   # End the game
             elif board.is_board_full():
                 print "It's a draw!"
@@ -85,4 +173,4 @@ if __name__ == '__main__':
                     current_player = 1
         else:
             # Move was not played successfully
-            print "That square is already filled!"
+            print "That square is ooh ooh already filled!"
