@@ -1,0 +1,10 @@
+
+
+def calculate_similarity(secretWord)
+	similarity = 0
+	print "input a 5 letter word"
+	guessedWord = input
+	for x in range 5
+		if x letter in in guessedWord == x letter in secretWord
+			similarity += 1
+	print similarity
